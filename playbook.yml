@@ -1,0 +1,90 @@
+---
+- hosts: all
+  become: true
+  vars:
+    gpumem: 160
+    hostname: mono
+    timezone: Europe/Budapest
+    username: ijanos
+
+  tasks:
+    - name: Set hostname
+      hostname:
+        name={{ hostname }}
+
+    - name: Setup locale.gen
+      template:
+        src: locale.gen.j2
+        dest: /etc/locale.gen
+      notify: locale-regen
+
+    - name: Setup locale.conf
+      template:
+        src: locale.conf.j2
+        dest: /etc/locale.conf
+
+    - name: Setup boot config
+      template:
+        src: config.txt.j2
+        dest: /boot/config.txt
+
+    - name: Set the timezone
+      file:
+        src: /usr/share/zoneinfo/{{ timezone }}
+        dest: /etc/localtime
+        state: link
+
+    - name: Set up memory-only journal logging
+      template:
+        src: journald.conf.j2
+        dest: /etc/systemd/journald.conf
+
+    - name: Upgrade the system
+      pacman:
+        update_cache: yes
+        upgrade: yes
+
+
+    - name: Install packages
+      pacman: name={{ item }}
+      with_items:
+        - vim
+        - mc
+        - bash-completion
+        - htop
+        - tmux
+        - base-devel
+        - avahi
+        - nss-mdns
+        - wget
+
+    - name: enable mDNS
+      template:
+        src: nsswitch.conf.j2
+        dest: /etc/nsswitch.conf
+
+    - name: Enable avahi service
+      service:
+        name: avahi-daemon
+        enabled: yes
+        state: started
+
+    - name: Add normal user
+      user:
+        name: "{{ username }}"
+        group: users
+        groups: wheel
+        append: yes
+        createhome: yes
+
+    - name: Allow wheel group to have sudo rights
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) ALL'
+        validate: visudo -cf %s
+
+  handlers:
+   - name: locale-regen
+     command: locale-gen
