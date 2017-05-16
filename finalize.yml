@@ -1,0 +1,18 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+    - name: remove alarm user
+      user:
+        name: alarm
+        state: absent
+        remove: yes
+
+    - name: disable SSH password authentication
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^PasswordAuthentication"
+        line: "PasswordAuthentication no"
+        state: present
+        validate: "/usr/sbin/sshd -T -f %s"
