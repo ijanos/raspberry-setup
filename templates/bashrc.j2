@@ -1,0 +1,42 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bash.bashrc ]; then
+	. /etc/bash.bashrc
+fi
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=5000
+HISTFILESIZE=6000
+
+export MANWIDTH=80
+export EDITOR=vim
+
+shopt -s histappend
+
+# aliases
+alias rm='rm -i'
+alias la='ls -A'
+alias l='ls -CF'
+alias ls='ls --color=auto -X'
+alias ll='ls -lhX --group-directories-first'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# colorful bash prompt
+# source /usr/share/git-core/contrib/completion/git-prompt.sh
+source /usr/share/git/git-prompt.sh
+PS1=" \[\e[1;34m\]\w\[\e[m\]\[\e[0;32m\]\$(__git_ps1) \$\[\e[0m\] "
+
+# disable __vte_prompt_command
+PROMPT_COMMAND=''

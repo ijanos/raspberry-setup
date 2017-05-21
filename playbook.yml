@@ -92,6 +92,11 @@
         regexp: '^Color'
         line: 'Color'
 
+    - name: add a basic .bashrc for the normal user
+      template:
+        src: bashrc.j2
+        dest: /home/{{ username }}/.bashrc
+
   handlers:
    - name: locale-regen
      command: locale-gen
