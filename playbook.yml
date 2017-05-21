@@ -85,6 +85,13 @@
         line: '%wheel ALL=(ALL) ALL'
         validate: visudo -cf %s
 
+    - name: Enable colorful pacman output
+      lineinfile:
+        dest: /etc/pacman.conf
+        state: present
+        regexp: '^Color'
+        line: 'Color'
+
   handlers:
    - name: locale-regen
      command: locale-gen
