@@ -25,15 +25,14 @@ ansible-playbook playbook.yml  -i 192.168.1.256, --ask-pass -u alarm --ask-becom
 The default user is `alarm` the password is `alarm` and the become password is
 `root`.
 
-
-Change the root password and create a password for the newly created user:
+After the successful run of the playbook copy the ssh public key.
 
 ```
-# passwd USERNAME
+ssh-copy-id -i ~/.ssh/id_rsa.pub raspberry.local
 ```
 
 Then finalize playbook will delete the alarm user and disable password authentication for SSH.
 
 ```
-ansible-playbook finalize.yml -i 192.168.1.256, --ask-become-pass
+ansible-playbook finalize.yml -i raspberry.local, --ask-become-pass
 ```

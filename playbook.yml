@@ -7,6 +7,11 @@
     timezone: Europe/Budapest
     username: ijanos
 
+  vars_prompt:
+    - name: "password"
+      prompt: "Enter password for the new user"
+      private: yes
+
   tasks:
     - name: Set hostname
       hostname:
@@ -76,6 +81,9 @@
         groups: wheel
         append: yes
         createhome: yes
+
+    - name: Set the password for the new user
+      shell: echo -e "{{ password }}\n{{ password }}" | passwd {{ username }}
 
     - name: Allow wheel group to have sudo rights
       lineinfile:
