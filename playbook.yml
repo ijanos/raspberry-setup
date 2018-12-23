@@ -51,17 +51,17 @@
 
 
     - name: Install packages
-      pacman: name={{ item }}
-      with_items:
-        - vim
-        - mc
-        - bash-completion
-        - htop
-        - tmux
-        - base-devel
-        - avahi
-        - nss-mdns
-        - wget
+      pacman: 
+        name:
+          - vim
+          - mc
+          - bash-completion
+          - htop
+          - tmux
+          - base-devel
+          - avahi
+          - nss-mdns
+          - wget
 
     - name: enable mDNS
       template:
